@@ -1,0 +1,11 @@
+"0","ind_smart_doc <- ind_smart_new %>%
+  pivot_longer(cols = c(Specific, Measurable, Achievable, Relevant, Timebound), 
+               names_to = ""Criteria"", values_to = ""Value"") %>%
+  group_by(Criteria, Document) %>%
+  summarise(Total = sum(Value == 1)) %>%
+  pivot_wider(names_from = Document, values_from = Total, values_fill = 0) %>%
+  mutate(Total = NDC + NAP,
+         Pc_NDC = round((NDC / Total) * 100, 2),
+         Pc_NAP = round((NAP / Total) * 100, 2))
+"
+"2","`summarise()` has grouped output by 'Criteria'. You can override using the `.groups` argument."

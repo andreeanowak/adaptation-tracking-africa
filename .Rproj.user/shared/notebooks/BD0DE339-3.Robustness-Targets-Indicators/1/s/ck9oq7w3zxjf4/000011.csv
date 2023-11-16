@@ -1,0 +1,6 @@
+"0","# targets for ag sector"
+"0","targets_ag <- targets[targets$SectorType %in% c(""Food, fiber, other ecosystem products""),]"
+"0","targets_ag <- targets_ag[, c(2, 3, 4, 5, 7, 12:18)]"
+"2","Error in `[.data.frame`(targets_ag, , c(2, 3, 4, 5, 7, 12:18)) : 
+  undefined columns selected
+"

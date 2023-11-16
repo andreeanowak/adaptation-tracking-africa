@@ -1,0 +1,6 @@
+"0","# Summary of elements by document"
+"0","nElements_doc <- all_elem %>%"
+"0","  group_by(Element, Document) %>%"
+"0","  summarise("
+"0","    Total = sum(Total))"
+"2","`summarise()` has grouped output by 'Element'. You can override using the `.groups` argument."

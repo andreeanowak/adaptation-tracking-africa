@@ -1,0 +1,4 @@
+"0","linkages_agg <- linkages %>%"
+"0","   group_by(Country, ISO3) %>%"
+"0","  summarise(across(HazardSystem:ActionIndicator, ~ifelse(any(. == 1), 1, 0)))"
+"2","`summarise()` has grouped output by 'Country'. You can override using the `.groups` argument."

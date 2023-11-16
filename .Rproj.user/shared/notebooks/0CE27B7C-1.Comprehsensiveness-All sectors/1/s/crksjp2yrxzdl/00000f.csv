@@ -1,0 +1,5 @@
+"0","# How many countries for each sector"
+"0","ncty_sec <- group_sector_cty_elem %>%"
+"0","  group_by(SectorType) %>%"
+"0","  summarise(unique_countries = n_distinct(Country)) %>%"
+"0","  arrange(-unique_countries) "

@@ -1,0 +1,6 @@
+"0","adaptdata$TargetType <- """""
+"0",""
+"0","adaptdata$TargetType <- ifelse(!is.na(adaptdata$TargetTime) & adaptdata$TargetTime != """" & "
+"0","                               !is.na(adaptdata$TargetValue) & adaptdata$TargetValue != """", ""measurable and timebound"","
+"0","                               ifelse(!is.na(adaptdata$TargetTime) & adaptdata$TargetTime != """", ""timebound"","
+"0","                                      ifelse(!is.na(adaptdata$TargetValue) & adaptdata$TargetValue != """", ""measurable"", """")))"

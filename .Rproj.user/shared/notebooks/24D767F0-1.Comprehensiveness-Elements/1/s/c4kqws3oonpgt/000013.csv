@@ -1,0 +1,5 @@
+"0","merged_table <- merge(ncty_sec_elem, nelem_sec[, c(""SectorType"", ""Total_Elements"")], by = ""SectorType"", all.x = TRUE)"
+"0","merged_table$Total_Elements <- as.numeric(merged_table$Total_Elements)"
+"0","percentage_df <- merged_table"
+"0","percentage_df[, 2:7] <- round(percentage_df[, 2:7] / 53, 2)  # Divide each value in columns 2 to 7 by 53"
+"0","percentage_df$Total_Elements <- round(percentage_df$Total_Elements / 7686, 2)  # Divide Total_Elements by 7686"

@@ -1,0 +1,7 @@
+"0","targets_mt <- targets[targets$TargetType == ""measurable and timebound"" & targets$SectorType == ""Food, fiber, other ecosystem products"", ]"
+"0","targets_mt$ISO3 <- countrycode(targets_mt$Country, ""country.name"", ""iso3c"")"
+"0",""
+"0","targets_mt <- targets_mt[, c(3, 4, 5, 7, 12:15, 25)]"
+"2","Error in `[.data.frame`(targets_mt, , c(3, 4, 5, 7, 12:15, 25)) : 
+  undefined columns selected
+"

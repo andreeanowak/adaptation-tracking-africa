@@ -1,0 +1,5 @@
+"0","write.csv(tgt_sector,""C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Results/3_nTargetsXsectorXcountry.csv"")"
+"0","write.csv(nTargets_nCty,""C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Results/3_nTargetsXnCountries.csv"")"
+"0","write.csv(n_cty_sector,""C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Results/3_nCountriesTargetsXsector.csv"")"
+"0","write.csv(sector_summary,""C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Results/3_nTargetsCountriesXSector.csv"")"
+"0","write.csv(targets_ag,""C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Results/3_TargetsAg.csv"")"

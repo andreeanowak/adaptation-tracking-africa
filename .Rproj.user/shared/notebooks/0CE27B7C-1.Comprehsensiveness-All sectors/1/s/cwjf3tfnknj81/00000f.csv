@@ -1,0 +1,8 @@
+"0","library(tidyverse)       #for ggplot, dplyr and several other stuff"
+"0","library(forcats)         #for sorting within ggplot"
+"0","library(dplyr)"
+"0","library(ggplot2)"
+"0","library(stringr) # doe str_wrap function (wrapping text on plots)"
+"0","library(tidyr)"
+"0","library(geomtextpath)"
+"0","library(ggrepel)"

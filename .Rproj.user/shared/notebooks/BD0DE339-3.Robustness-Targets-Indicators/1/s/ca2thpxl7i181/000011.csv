@@ -1,0 +1,8 @@
+"0","library(countrycode)"
+"0","indicators_ag$ISO3 <- countrycode(indicators_ag$Country, ""country.name"", ""iso3c"")"
+"0","indicators_ag2 <- indicators_ag[, c(3, 4, 7, 19:24, 27)] "
+"0","indicators_ag2 <- indicators_ag2[, c(10, 1, 2, 3, 4, 5, 6, 7, 8, 9)]"
+"0",""
+"0","# Save table to local file"
+"0","# Modify the file path to specify the location where you would like to store the table"
+"0","write.csv(indicators_ag2,""C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Results/3_SI_Table3.csv"")"

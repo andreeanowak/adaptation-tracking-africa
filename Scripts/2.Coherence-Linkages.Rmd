@@ -1,0 +1,72 @@
+---
+title: "Coherence-Linkages"
+output: html_document
+date: "2023-04-18"
+---
+
+# Summary
+Data for this code are available at: https://doi.org/10.7910/DVN/VK3CP/
+This code explains the analysis carried out for assessing coherence of information in NDCs and NAPs. 
+Specifically, it helps to generate Figure 3 in the Manuscript illustrating the coherence between adaptation cycle elements. 
+In the figure, nodes represent the six adaptation elements. Links indicate the frequency of co-occurrence between two elements. n represents the total number of countries that identify a type of adaptation element (hazards, system at risk, goal, objective, action, or indicator); or that establish linkages between two pairs of elements. The wider the link, the more countries explicitly establish a link between the corresponding pair of elements. Each color represents an adaptation element. The grey circle highlights four stages of the adaptation cycle: assessment, planning, implementation, and monitoring and evaluation. 
+
+which illustrates a he chord diagram representing how 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Load packages
+```{r}
+library(circlize)
+library(ggplot2)
+```
+# Preparation
+To run this code, download the file "AdaptationElementsLinkages" available at: https://doi.org/10.7910/DVN/VK3CP.
+First, you have to first create an adjancency matrix. This is explained in the R Mark Down file: "0.AdaptationElementsLinkages_Processed"
+The code below starts by uploading the matrix from the local file. 
+```{r}
+links <- read.csv(file = "C:/Users/anowak/OneDrive - CGIAR/Desktop/Repositories/adaptation-tracking-africa/Data-Processed/LinkagesMatrix.csv", header = TRUE)
+#links_full <- read.csv(file = "Data-Raw/LinkagesRaw.csv", header = TRUE)
+rownames(links) <- make.unique(links$X)
+links$X <- NULL
+# rename Systems at risk
+colnames(links)[2] <- "System at risk"
+rownames(links)[2] <- "System at risk"
+```
+
+# Figure 3
+Create a symetric matrix, ensuring  the values on the upper triangle of the matrix match the corresponding values on the lower triangle. 
+Therefore, use lower.tri() function to identify the lower triangle of the matrix, and then assign the corresponding values from the transposed matrix using t(symmetric_matrix). After making these changes, the matrix will be symmetric matrix. The diagonal elements are left unchanged, assuming they represent the connection of a group to itself (which should typically be zero). 
+You can adjust the figure to include legends and annotations. 
+```{r}
+# create matrix
+mylinks <- as.matrix(links)
+
+lower_triangular <- lower.tri(mylinks)
+mylinks[upper.tri(mylinks)] <- 0
+print(mylinks)
+
+# Set colors for the plot
+set.seed(999)
+colors <- c("Hazard" = "#c7eae5", 
+            "System at risk" =  "#5ab4ac",
+            "Goal" = "#01665e",
+            "Objective" =  "#8c510a", 
+            "Action" = "#d8b365",
+            "Indicator" = "#f6e8c3")
+
+# Create an image to store the graphic data. Adjust the file path to 
+png("C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Results/Fig3.png", width = 4, height = 4, units = "in", res = 330, bg = "transparent") 
+
+# Plot
+circos.par(gap.after = 10)
+circos.par(start.degree = 20) #to start with Hazards 
+par(mar = c(1, 1, 1, 1))  # Adjust the margins
+par(cex = 0.8)
+chordDiagram(mylinks, column.col = colors, grid.col = colors, transparency = 0.3, annotationTrack = "grid", annotationTrackHeight = mm_h(1))
+
+# Clear circular layout parameters
+circos.clear() 
+dev.off()
+```

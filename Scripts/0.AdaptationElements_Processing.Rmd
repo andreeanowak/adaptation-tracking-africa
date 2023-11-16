@@ -1,0 +1,262 @@
+---
+title: "AdaptationElements_Processing"
+output: html_document
+date: "2023-02-03"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Summary
+This code explains how the file "AdaptationElements" available at: https://doi.org/10.7910/DVN/VK3CP was created. 
+Specifically, it contains information on how the information on hazards, systems at risk, targets, sectors, and indicators has been categorized and how the information was cleaned, leading to the final version of the "AdaptationElements" file.
+
+# Load packages
+```{r}
+library(stringr)
+library(tidyr)
+library(dplyr)
+```
+
+# Preparation
+To run this code, download the file "AdaptationElements" available at: https://doi.org/10.7910/DVN/VK3CP.
+Adjust the file path below with the correct location where you would saved the "AdaptationElements" file
+```{r}
+adaptdata <- read.csv(file = "C:/Users/anowak/OneDrive - CGIAR/Desktop/Repositories/adaptation-tracking-africa/Data-Raw/AdaptationElements.csv", fileEncoding = "Windows-1252")
+```
+
+# Step 1: Hazards
+```{r}
+adaptdata$HazardType <- ""
+adaptdata <- adaptdata %>% relocate(HazardType, .after = ElementText)
+
+adaptdata$HazardType <- ifelse(adaptdata$Element == "Hazard" & grepl("heat wave|heatwave|cold waves|extreme temperature|extreme cold|extremely low|high temperature|excessive heat|high heat|heat|maximum and minimum|warmer|glacier|snowfall|evapo|higher occurrence of hot", adaptdata$ElementText, ignore.case = TRUE), "Extreme temperature",
+ifelse(adaptdata$Element == "Hazard" & grepl("storm|hail|heavy rain|tornado|wind|cyclone|extreme rainfall|violent rains", adaptdata$ElementText, ignore.case = TRUE), "Storm",
+ifelse(adaptdata$Element == "Hazard" & grepl("drought", adaptdata$ElementText, ignore.case = TRUE), "Drought", 
+ifelse(adaptdata$Element == "Hazard" & grepl("wild fire|wildfire|forest fire|fire", adaptdata$ElementText, ignore.case = TRUE), "Wildfire",
+ifelse(adaptdata$Element == "Hazard" & grepl("landslide|land slide", adaptdata$ElementText, ignore.case = TRUE), "Landslide",
+ifelse(adaptdata$Element == "Hazard" & grepl("flood|inundation", adaptdata$ElementText, ignore.case = TRUE), "Flood", 
+ifelse(adaptdata$Element == "Hazard" & grepl("rise in temperature|increase in temperature|increases in temperature|temperature increase|increasing temperature|increased temperature|increase temperatures|higher temperatures|average temperature|annual temperature|increase in the extent|temperature of our cities|Increase in number of hot days", adaptdata$ElementText, ignore.case = TRUE), "Change in temperature", 
+ifelse(adaptdata$Element == "Hazard" & grepl("rainfall|precipitation|distribution of rains|disruption|fluctuation of rains|shorter rain|earlier and ending later", adaptdata$ElementText, ignore.case = TRUE), "Change in precipitation", 
+ifelse(adaptdata$Element == "Hazard" & grepl("salinization|salt water|saltwater|salinity", adaptdata$ElementText, ignore.case = TRUE), "Salinization",
+ifelse(adaptdata$Element == "Hazard" & grepl("erosion|land degradation|pasture degradation|desertification|degradation of land|loss of organic matter", adaptdata$ElementText, ignore.case = TRUE), "Land degradation",
+ifelse(adaptdata$Element == "Hazard" & grepl("sea level|sea-level|submersion|beach loss", adaptdata$ElementText, ignore.case = TRUE), "Sea level rise", 
+ifelse(adaptdata$Element == "Hazard" & grepl("sea temperature|sea temperture|temperature of the sea|sea surface temperature|water temperature|ocean temperature", adaptdata$ElementText, ignore.case = TRUE), "Sea temperature", 
+ifelse(adaptdata$Element == "Hazard" & grepl("acidification|acidity|acidic|coral", adaptdata$ElementText, ignore.case = TRUE), "Ocean acidification",
+ifelse(adaptdata$Element == "Hazard" & grepl("pest|disease|epidemics|infestation|invasion", adaptdata$ElementText, ignore.case = TRUE), "Pest and disease",
+""))))))))))))))
+```
+
+# Step 2: Systems at risk
+```{r}
+adaptdata$SystemType <- ""
+adaptdata <- adaptdata %>% relocate(SystemType, .after = HazardType)
+
+adaptdata$SystemType <- 
+ifelse(adaptdata$Element == "System at risk" & grepl("crop|agricultural production|agriculture|horticulture|agricultural pests|yield|rain-fed|land use planning|cultivated area|pest", 
+                                                     adaptdata$ElementText, ignore.case = TRUE), "Crop",
+ifelse(adaptdata$Element == "System at risk" & grepl("livestock|pasture|pastoralist|pastoral area|grazing", 
+                                                     adaptdata$ElementText, ignore.case = TRUE), "Livestock",
+ifelse(adaptdata$Element == "System at risk" & grepl("fish|aquaculture", 
+                                                     adaptdata$ElementText, ignore.case = TRUE), "Fisheries and aquaculture", 
+ifelse(adaptdata$Element == "System at risk" & grepl("forest|tree", 
+                                                     adaptdata$ElementText, ignore.case = TRUE), "Forest",
+ifelse(adaptdata$Element == "System at risk" & grepl("terrestrial|hectares|desertification|natural resource|land resource|land degradation|degradation of land|soil erosion|ecosystem|environment|ecological system|destruction of soil", 
+                                                     adaptdata$ElementText, ignore.case = TRUE), "Terrestrial", 
+ifelse(adaptdata$Element == "System at risk" & grepl("freshwater|water table|water resources|drinking water|potable water|quality of water|water quality|water sources|water stress|water shortage|water supply|water pollution|demand for water|water availability|river", 
+                                                     adaptdata$ElementText, ignore.case = TRUE), "Freshwater", 
+ifelse(adaptdata$Element == "System at risk" & grepl("biodiversity|flora|range of species|species extinction",
+                                                     adaptdata$ElementText, ignore.case = TRUE), "Biodiversity", 
+ifelse(adaptdata$Element == "System at risk" & grepl("coast|sea level rise|coral|beach|marine resources|marine|mangrove",
+                                                     adaptdata$ElementText, ignore.case = TRUE), "Coastal",
+ifelse(adaptdata$Element == "System at risk" & grepl("nutrition|food insecure|food security|food insecurity|food availability|famine", 
+                                                     adaptdata$ElementText, ignore.case = TRUE), "Food and nutrition",
+ifelse(adaptdata$Element == "System at risk" & grepl("gender|women|youth|children|inclusion|vulnerable groups|most vulnerable", 
+                                                     adaptdata$ElementText, ignore.case = TRUE), "Gender and inclusion", 
+ifelse(adaptdata$Element == "System at risk" & grepl("livelihood|poverty|poor|survival|human lives|loss of life|loss of lives|socio-economic development|economic activities|tourism|income|safety net", 
+                                                     adaptdata$ElementText, ignore.case = TRUE), "Livelihoods and poverty", 
+ifelse(adaptdata$Element == "System at risk" & grepl("health|water-borne disease|waterborn|water born|respiratory diseases|vector-borne disease|malaria", 
+                                                     adaptdata$ElementText, ignore.case = TRUE), "Health",
+ifelse(adaptdata$Element == "System at risk" &grepl("cities|city|infrastructure|buildings|road|energy|sanitation|settlement|housing|properties|property|material damages|evacuation route|trade", 
+                                                     adaptdata$ElementText, ignore.case = TRUE), "Infrastructure and services",
+ifelse(adaptdata$Element == "System at risk" & grepl("peace|conflict|human security|national security", 
+                                                     adaptdata$ElementText, ignore.case = TRUE), "Human security",
+""))))))))))))))
+```
+
+# Step 3:Targets
+```{r}
+adaptdata$TargetType <- ""
+
+adaptdata$TargetType <- ifelse(!is.na(adaptdata$TargetTime) & adaptdata$TargetTime != "" & 
+                               !is.na(adaptdata$TargetValue) & adaptdata$TargetValue != "", "measurable and timebound",
+                               ifelse(!is.na(adaptdata$TargetTime) & adaptdata$TargetTime != "", "timebound",
+                                      ifelse(!is.na(adaptdata$TargetValue) & adaptdata$TargetValue != "", "measurable", "")))
+```
+
+# Step 4: Sectors
+The script will be run in the below order, to ensure proper tagging (co-occurrence of words). 
+```{r}
+# Create new column for classified sectors, move column to the front
+adaptdata$SectorType <- ""
+adaptdata <- adaptdata %>% relocate(SectorType, .after = Sector)
+
+# Not specified, if the sector has not been mentioned in the source document
+adaptdata$SectorType[grep("Not specified", 
+                          adaptdata$Sector, ignore.case = TRUE)] <- "Not specified"
+
+#Livelihoods, Poverty and Sustainable development
+adaptdata$SectorType[grep("(social|poverty|people|protection|employment|econom|rural development|sustainable development|tourism|education|capacity|transfer)", 
+                         adaptdata$Sector, ignore.case = TRUE)] <- "Livelihoods, poverty, sustainable development"
+
+#Health, Well-being, and communities
+  # Matches all terms except "Culture" case-insensitively
+adaptdata$SectorType[grep("(health|well-being|nutrition|territorial communities|Local knowledge)", 
+                          adaptdata$Sector, ignore.case = TRUE)] <- "Health, wellbeing, communities"
+  # Matches only "Culture" with a capital "C"
+adaptdata$SectorType[grep("Culture", 
+                          adaptdata$Sector)] <- "Health, wellbeing, communities"
+
+#Cities, Settlements and Infrastructures
+adaptdata$SectorType[grep("(city|cities|urban|infrastructure|Infrastructure, transport and building|settlement|housing|habitat|industr|waste|transport|mining|energy|mineral resources|landfills|mineral products)",
+                          adaptdata$Sector, ignore.case = TRUE)] <- "Cities, settlements, key infrastructure"  ## ALSO
+adaptdata$SectorType[grep("(social infrastructures|capacity)", 
+                          adaptdata$Sector, ignore.case = TRUE)] <- "Livelihoods, poverty, sustainable development"
+
+#Terrestrial and Freshwater Ecosystems
+adaptdata$SectorType[grep("(forest|environ|enviornment|environment|ecosystem|biodiversity|land|natural|ecology|REDD)", 
+                         adaptdata$Sector, ignore.case = TRUE)] <- "Terrestrial, freshwater ecosystems"  ### ALSO:
+adaptdata$SectorType[grep("(Cities and Built Environment|Land Use and Human Settlements Development|sanitary landfills)",
+                          adaptdata$Sector, ignore.case = TRUE)] <- "Cities, settlements, key infrastructure"
+
+#Water, sanitation, hygiene
+adaptdata$SectorType[grep("(water|sanitation|water, sanitation and waste|Hygiene|sewerage|water security|water and energy|water use)",
+                          adaptdata$Sector, ignore.case = TRUE)] <- "Water, sanitation, hygiene"
+
+#Ocean and Coastal Ecosystems
+adaptdata$SectorType[grep("(ocean|coast|coastal|marine|coastal land use|blue carbon)", 
+                          adaptdata$Sector, ignore.case = TRUE)] <- "Ocean, coastal ecosystems"
+
+#Crosscutting
+adaptdata$SectorType[grep("(Crosscutting|all sectors|zone-specific|General|cross-sectoral|innovations|research|R&D|integration|empower|gender|women|Gender and social inclusion|legislation|policies|governance|devolution|institution|private|public sector|territory|spatial planning|planning|disaster|risk|climate|climate service|weather|meteo|warning|M&E)", 
+                          adaptdata$Sector, ignore.case = TRUE)] <- "Crosscutting"
+
+# systems at risk are mapped to sectors
+adaptdata$SectorType[grep("(Crop|Livestock|Fisheries and aquaculture|Forest|Food and nutrition)", 
+                          adaptdata$SystemType, ignore.case = TRUE)]  <- "Food, fiber, other ecosystem products"
+adaptdata$SectorType[grep("coastal", 
+                          adaptdata$SystemType, ignore.case = TRUE)]  <- "Ocean, coastal ecosystems"
+adaptdata$SectorType[grep("(Terrestrial|Freshwater|Biodiversity)", 
+                          adaptdata$SystemType, ignore.case = TRUE)]  <- "Terrestrial, freshwater ecosystems"
+adaptdata$SectorType[grep("(Health|Human security)", 
+                          adaptdata$SystemType, ignore.case = TRUE)]  <- "Health, wellbeing, communities"
+adaptdata$SectorType[grep("Livelihoods and poverty", 
+                          adaptdata$SystemType, ignore.case = TRUE)]  <- "Livelihoods, poverty, sustainable development"
+adaptdata$SectorType[grep("Gender and inclusion", 
+                          adaptdata$SystemType, ignore.case = TRUE)]  <- "Crosscutting"
+adaptdata$SectorType[grep("Infrastructure and services", 
+                          adaptdata$SystemType, ignore.case = TRUE)]  <- "Cities, settlements, key infrastructure"
+
+# ALSO: 
+adaptdata$SectorType[grep("(Tourism and Coastal Zone Management|Coastal zone management)", 
+                          adaptdata$Sector, ignore.case = TRUE)] <- "Ocean, coastal ecosystems"
+
+adaptdata$SectorType[grep("(Vulnerable communities|Territorial development)", 
+                          adaptdata$Sector, ignore.case = TRUE)] <- "Health, wellbeing, communities"
+
+adaptdata$SectorType[grep("(Private sector/trade; Manufacturing; Business process|Habitat, urban planning and development of the territory|Housing, Territorial Development and Urban Planning|Renewable Energy|Urban planning and infrastructure|Urban Development & Tourism|Telecommunications)", 
+                          adaptdata$Sector, ignore.case = TRUE)] <- "Cities, settlements, key infrastructure"
+
+adaptdata$SectorType[grep("(Agriculture; Livestock; Fisheries|Agriculture and food security|Agriculture, Climate services, Others|Sustainable development, Agriculture)", 
+                          adaptdata$Sector, ignore.case = TRUE)] <- "Food, fiber, other ecosystem products"
+
+adaptdata$SectorType[grep("(Multiple: Social Economy, Tourism|Multiple: Social Affairs, Women and Family|Multiple: Planning, Rural development|Multiple: Sustainable development, Planning|Education, research|Education, training, research)", 
+                          adaptdata$Sector, ignore.case = TRUE)] <- "Livelihoods, poverty, sustainable development"
+
+#Food, Fiber and Other ecosystem products
+adaptdata$SectorType[grep("(agriculture|food|crop|livestock|animal|fish|fisheries|aquaculture|seed|irrigation|value chain|land use|land tenure|land and forestry|Agriculture, forest and other land uses|land affairs|land reforms)", 
+                          adaptdata$Sector, ignore.case = TRUE)] <- "Food, fiber, other ecosystem products"
+
+adaptdata$SectorType[grep("coastal land use|marine", 
+                          adaptdata$Sector, ignore.case = TRUE)] <- "Ocean, coastal ecosystems"
+adaptdata$SectorType[grep("Land Use and Human Settlements Development", 
+                          adaptdata$Sector, ignore.case = TRUE)] <- "Cities, settlements, key infrastructure"
+```
+
+Save new data to local file
+```{r}
+write.csv(adaptdata,"C:/Users/anowak/OneDrive - CGIAR/Desktop/Repositories/adaptation-tracking-africa/Data-Processed/AdaptationElementsClean.csv")
+```
+
+# Step 5: Indicators
+This step adds the indicator assessment that has been carried out manually, in excel. The raw file is available upon request.
+```{r}
+indicators <- read.csv(file = "C:/Users/anowak/OneDrive - CGIAR/Desktop/Repositories/adaptation-tracking-africa/Data-Processed/IndicatorsProcessed.csv", fileEncoding = "Windows-1252")
+
+# assign ID column to main dataframe
+df1_indicator_rows <- which(adaptdata$Element == "Indicator")
+adaptdata$new_ID <- NA  # Initialize the new_ID column with NAs
+adaptdata$new_ID[df1_indicator_rows] <- paste0("id", seq_along(df1_indicator_rows))
+
+# Assign IDs for rows with 'Indicator' in indicators dataframe
+df2_indicator_rows <- which(indicators$Element == "Indicator")
+indicators$new_ID <- NA  # Initialize the new_ID column with NAs
+indicators$new_ID[df2_indicator_rows] <- paste0("id", seq_along(df2_indicator_rows))
+
+merged_data <- adaptdata %>%
+  left_join(indicators %>% filter(!is.na(new_ID)) %>% select(new_ID, 14:19), by = "new_ID")
+
+# remove ID column
+merged_data$new_ID <- NULL
+
+# remove NAs from indicator assessment columns
+merged_data <- merged_data %>%
+  mutate_at(vars(18:23), ~ifelse(is.na(.), "", .))
+
+```
+
+# Step 6: Clean dataframe
+Punctuation, extra empty rows
+```{r}
+clean_data <- function(data){
+  n <- ncol(data)  # Number of columns
+  for (i in 1:n){
+    # Remove punctuation at the end
+    data[[i]] <- sub("[[:punct:]]$", "", data[[i]])
+    
+    # Remove additional enter spaces or blank rows
+    data[[i]] <- gsub("\n", "", data[[i]])
+    
+    # Remove spaces at the beginning
+    data[[i]] <- sub("^\\s+", "", data[[i]])
+    
+    # Extract the first character
+    first_char <- substr(data[[i]], 1, 1)
+    
+    # Extract the remaining part of the text, excluding the first character
+    remaining_part <- substr(data[[i]], 2, nchar(data[[i]]))
+    
+    # For specific columns (5, 6, 11), make the first character uppercase
+    # For other columns, just concatenate the first character and remaining part
+    if (i %in% c(5, 6, 9, 13, 14)){
+      data[[i]] <- paste0(toupper(first_char), remaining_part)
+    } else {
+      data[[i]] <- paste0(first_char, remaining_part)
+    }
+  }
+  return(data)
+}
+
+# Clean the data
+cleaned_df <- clean_data(merged_data)
+
+# Harmonize tagging
+cleaned_df$ElementLabel <- ifelse(cleaned_df$ElementLabel %in% c("No", "None"), "Not specified", cleaned_df$ElementLabel)
+```
+
+# Save data to a local file
+Modify the file path to specify the location where you would like to store the new dataframe
+```{r}
+write.csv(cleaned_df,"C:/Users/anowak/OneDrive - CGIAR/Desktop/Repositories/adaptation-tracking-africa/Data-Processed/AdaptationElementsProcessed.csv")
+```

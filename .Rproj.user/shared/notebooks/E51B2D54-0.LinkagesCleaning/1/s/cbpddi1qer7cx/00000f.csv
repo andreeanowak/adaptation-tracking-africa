@@ -1,0 +1,3 @@
+"0","setwd(""C:/Users/anowak/OneDrive - CGIAR/Desktop/Repositories/adaptation-tracking-africa/Data-Raw/"")"
+"2","Warning: The working directory was changed to C:/Users/anowak/OneDrive - CGIAR/Desktop/Repositories/adaptation-tracking-africa/Data-Raw inside a notebook chunk. The working directory will be reset when the chunk is finished running. Use the knitr root.dir option in the setup chunk to change the working directory for notebook chunks."
+"0","linkages <- read.csv(file = ""LinkagesRaw.csv"", fileEncoding = ""Windows-1252"")"

@@ -1,0 +1,6 @@
+"0","ind_sector <- indicators %>%"
+"0","  group_by(SectorType) %>%"
+"0","  summarise(nIndicators = n(), "
+"0","            nCountries = n_distinct(Country), .groups = 'drop')"
+"2","Error in group_by(., SectorType) : object 'indicators' not found
+"
