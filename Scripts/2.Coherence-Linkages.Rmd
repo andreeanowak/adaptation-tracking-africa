@@ -26,7 +26,7 @@ To run this code, download the file "AdaptationElementsLinkages" available at: h
 First, you have to first create an adjancency matrix. This is explained in the R Mark Down file: "0.AdaptationElementsLinkages_Processed"
 The code below starts by uploading the matrix from the local file. 
 ```{r}
-links <- read.csv(file = "C:/Users/anowak/OneDrive - CGIAR/Desktop/Repositories/adaptation-tracking-africa/Data-Processed/LinkagesMatrix.csv", header = TRUE)
+links <- read.csv(file = "C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Data/Data-Processed/LinkagesMatrix.csv", header = TRUE)
 #links_full <- read.csv(file = "Data-Raw/LinkagesRaw.csv", header = TRUE)
 rownames(links) <- make.unique(links$X)
 links$X <- NULL

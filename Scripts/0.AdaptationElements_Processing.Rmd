@@ -23,7 +23,7 @@ library(dplyr)
 To run this code, download the file "AdaptationElements" available at: https://doi.org/10.7910/DVN/VK3CP.
 Adjust the file path below with the correct location where you would saved the "AdaptationElements" file
 ```{r}
-adaptdata <- read.csv(file = "C:/Users/anowak/OneDrive - CGIAR/Desktop/Repositories/adaptation-tracking-africa/Data-Raw/AdaptationElements.csv", fileEncoding = "Windows-1252")
+adaptdata <- read.csv(file = "C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Data/Data-Raw/AdaptationElements.csv", fileEncoding = "Windows-1252")
 ```
 
 # Step 1: Hazards
@@ -258,5 +258,5 @@ cleaned_df$ElementLabel <- ifelse(cleaned_df$ElementLabel %in% c("No", "None"), 
 # Save data to a local file
 Modify the file path to specify the location where you would like to store the new dataframe
 ```{r}
-write.csv(cleaned_df,"C:/Users/anowak/OneDrive - CGIAR/Desktop/Repositories/adaptation-tracking-africa/Data-Processed/AdaptationElementsProcessed.csv")
+write.csv(cleaned_df,"C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Data/Data-Processed/AdaptationElementsProcessed.csv")
 ```

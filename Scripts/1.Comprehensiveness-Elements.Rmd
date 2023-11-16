@@ -28,7 +28,7 @@ library(ggrepel)
 To run this code, download the file "AdaptationElements" available at: https://doi.org/10.7910/DVN/VK3CP.
 Adjust the file path below with the correct location where you saved the "AdaptationElements" file
 ```{r}
-adaptdata <- read.csv(file = "C:/Users/anowak/OneDrive - CGIAR/Desktop/Repositories/adaptation-tracking-africa/Data-Processed/AdaptationElementsProcessed.csv", fileEncoding = "Windows-1252")
+adaptdata <- read.csv(file = "C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Data/Data-Processed/AdaptationElementsProcessed.csv", fileEncoding = "Windows-1252")
 ```
 
 # Descriptive statistics

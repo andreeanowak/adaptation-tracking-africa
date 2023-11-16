@@ -23,7 +23,7 @@ library(dplyr)
 To run this code, download the file "AdaptationElementsLinkages" available at: https://doi.org/10.7910/DVN/VK3CP.
 Adjust the file path below with the correct location where you saved the "AdaptationElementsLinkages" file
 ```{r}
-linkages <- read.csv(file = "C:/Users/anowak/OneDrive - CGIAR/Desktop/Repositories/adaptation-tracking-africa/Data-Raw/AdaptationElementsLinkagesRaw.csv", fileEncoding = "Windows-1252")
+linkages <- read.csv(file = "C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Data/Data-Raw/AdaptationElementsLinkages.csv", fileEncoding = "Windows-1252")
 ```
 # Step 1: Dataset Examination
 We began with the "AdaptationElementsLinkages" dataset containing information on the connections between different elements such as 'Hazard', 'System', 'Goal', etc., for 53 countries. Each row represented a country's document (NAP and/or NDC), and the columns indicated binary relations (1 for a connection and 0 for no connection) between these elements.
@@ -92,7 +92,7 @@ linkages_agg_total <-
 # Save data to a local file
 Modify the file path to specify the location where you would like to store the new dataframe
 ```{r}
-write.csv(adj_matrix,"C:/Users/anowak/OneDrive - CGIAR/Desktop/Repositories/adaptation-tracking-africa/Data-Processed/LinkagesMatrix.csv")
+write.csv(adj_matrix,"C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Data/Data-Processed/LinkagesMatrix.csv")
 write.csv(linkages_agg_total, "C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Results/3_LinkagesXcountry.csv")
 ```
 
