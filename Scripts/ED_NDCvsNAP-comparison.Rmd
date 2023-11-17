@@ -1,0 +1,173 @@
+---
+title: "NAPvsNDC-Comprehensiveness-Coherence-Robustness"
+output: html_document
+date: "2023-11-09"
+---
+
+# Summary
+Data for this code are available at: https://doi.org/10.7910/DVN/VK3CP
+This code explains the analysis carried out for comparing comprehensiveness, coherence and robustness of NDCs and NAPs. 
+Specifically, it helps to generate individual panels for Figure 1a-c in the Extended Data.
+
+Comprehensiveness is defined by the number of elements (n) featured in each country document (min. 3 and max. 6 elements);
+Coherence is defined by the number of linkages (n) between the six adaptation elements featured in each country document (min. 1 and max. 15 linkages);
+Robustness is defined by the number of SMART criteria (n) met by adaptation indicators in each country document (min.1 and max. 5 criteria). The assessment focuses on the best performing indicators and therefore provides an aggregate snapshot of overall robustness of the information in a document. If a document's adaptation indicators met different criteria to different extents, we used the maximum number of criteria fulfilled as the specific document's benchmark. SMART criteria refers to: Specific, Measurable, Achievable, Relevant, and Timebound. 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load packages
+```{r}
+library(tidyr)
+library(dplyr)
+```
+
+# Preparation
+To run this code, download the files "AdaptationElements" and "AdaptationElementsLinkages" available at: https://doi.org/10.7910/DVN/VK3CP.
+Adjust the file path below with the correct location where you saved the files. 
+```{r}
+adaptdata <- read.csv(file = "C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Data/Data-Processed/AdaptationElementsProcessed.csv", fileEncoding = "Windows-1252")
+links_full <- read.csv(file = "C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Data/Data-Raw/AdaptationElementsLinkages.csv", header = TRUE)
+indicators <- adaptdata[adaptdata$Element == "Indicator", ]
+```
+# Extended Data Figure 1
+## Comprehensiveness
+Prepare
+```{r}
+df <- adaptdata[, c("Country", "Document", "Element")]
+
+df_summary <- df %>%
+  group_by(Country, Document) %>%
+  summarise(Comprehensiveness = n_distinct(Element)) %>%
+  ungroup()
+
+# Filter data for NDC and NAP
+ndc_data_com <- df_summary[df_summary$Document == "NDC", ]
+nap_data_com <- df_summary[df_summary$Document == "NAP", ]
+
+breaks_com <- c(0, 1, 2, 3, 4, 5, 6)
+```
+Plot
+```{r}
+png("C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Results/ED_Figure1a.png", width = 3, height = 3, units = "in", res = 330)
+
+par(cex = 0.7)
+
+hist_com <- {
+  hist(ndc_data_com$Comprehensiveness, breaks = breaks_com, main = "", xlab = "Elements (n)", ylab = "Countries (n)", col = "#01665e", ylim = c(0, 25), xaxt = "n")
+  mean_ndc_com <- mean(ndc_data_com$Comprehensiveness)
+  sd_ndc_com <- sd(ndc_data_com$Comprehensiveness)
+  curve(dnorm(x, mean = mean_ndc_com, sd = sd_ndc_com) * length(ndc_data_com$Comprehensiveness) * diff(breaks_com)[1], col = "#001a18", lwd = 2, add = TRUE)
+}
+
+hist(nap_data_com$Comprehensiveness, breaks = breaks_com, main = "", xlab = "Elements (n)", ylab = "Countries (n)", col = rgb(214, 179, 101, alpha = 128, maxColorValue = 255), add = TRUE, ylim = c(0, 30), xaxt = "n")
+mean_nap_com <- mean(nap_data_com$Comprehensiveness)
+sd_nap_com <- sd(nap_data_com$Comprehensiveness)
+curve(dnorm(x, mean = mean_nap_com, sd = sd_nap_com) * length(nap_data_com$Comprehensiveness) * diff(breaks_com)[1], col = "#8c510a", lwd = 2, add = TRUE)
+
+ndc_counts_com <- hist(ndc_data_com$Comprehensiveness, breaks = breaks_com, plot = FALSE)
+nap_counts_com <- hist(nap_data_com$Comprehensiveness, breaks = breaks_com, plot = FALSE)
+
+#legend("topright", legend = c("NDC", "NAP"), fill = c("#01665e", rgb(214, 179, 101, alpha = 128, maxColorValue = 255), x = "topright", y = NULL))
+
+dev.off()
+```
+## Coherence
+Prepare
+```{r}
+# Convert empty spaces to 0, then convert columns 5:19 to numeric
+links_full[, 5:19] <- sapply(links_full[, 5:19], function(x) as.numeric(ifelse(x == "", 0, x)))
+
+# Handle potential NA values after conversion, replacing with 0
+links_full[, 5:19][is.na(links_full[, 5:19])] <- 0
+
+# Add the total_links column
+links_full$total_links <- rowSums(links_full[, 5:19])
+
+# subset
+links_full <- links_full[, c("Country", "Document", "total_links")]
+
+links_summary <- links_full
+
+# Filter the data for NDC and NAPs
+ndc_data_coh <- links_summary[links_summary$Document == "NDC", ]
+nap_data_coh <- links_summary[links_summary$Document == "NAP", ]
+ 
+breaks_coh <- c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+```
+Plot
+```{r}
+png("C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Results/ED_Figure1b.png", width = 3, height = 3, units = "in", res = 330)
+
+par(cex = 0.7)
+
+hist_coh <- {
+  hist(ndc_data_coh$total_links, breaks = breaks_coh, main = "", xlab = "Linkages (n)", ylab = "Countries (n)", col = "#01665e", ylim = c(0, 10), xaxt = "n")
+  mean_ndc_coh <- mean(ndc_data_coh$total_links)
+  sd_ndc_coh <- sd(ndc_data_coh$total_links)
+  curve(dnorm(x, mean = mean_ndc_coh, sd = sd_ndc_coh) * length(ndc_data_coh$total_links) * diff(breaks_coh)[1], col = "#001a18", lwd = 2, add = TRUE)
+}
+
+hist(nap_data_coh$total_links, breaks = breaks_coh, main = "", xlab = "Linkages (n)", ylab = "Countries (n)", col = rgb(214, 179, 101, alpha = 128, maxColorValue = 255), add = TRUE, ylim = c(0, 10), xaxt = "n")
+mean_nap_coh <- mean(nap_data_coh$total_links)
+sd_nap_coh <- sd(nap_data_coh$total_links)
+curve(dnorm(x, mean = mean_nap_coh, sd = sd_nap_coh) * length(nap_data_coh$total_links) * diff(breaks_coh)[1], col = "#8c510a", lwd = 2, add = TRUE)
+
+ndc_counts_coh <- hist(ndc_data_coh$total_links, breaks = breaks_coh, plot = FALSE)
+nap_counts_coh <- hist(nap_data_coh$total_links, breaks = breaks_coh, plot = FALSE)
+
+#legend("right", legend = c("NDC", "NAP"), fill = c("#01665e", rgb(214, 179, 101, alpha = 128, maxColorValue = 255)))
+
+dev.off()
+```
+# Robustness (indicators)
+```{r}
+# <- indicators[, c(2, 3, 20:24)]
+
+indicators_new <- indicators %>%
+  mutate_at(vars(20:24), ~ifelse(. == "yes", 1,
+                               ifelse(. == "no", 0, as.numeric(.))))
+
+indicators_new2 <- indicators_new %>%
+  group_by(Country, Document) %>%
+  mutate(nr_criteria = Specific + Measurable + Achievable + Relevant + Timebound) 
+  #summarise(nr_criteria = sum())
+
+indicators_new3 <- indicators_new2[, c(2, 3, 25)] 
+
+indicators_new3 <- indicators_new2 %>%
+  group_by(Country, Document) %>%
+  summarise(nr_criteria = max(nr_criteria, na.rm = TRUE))
+
+# Filter the data for NDC and NAPs
+ndc_data_r <- indicators_new3[indicators_new3$Document == "NDC", ]
+nap_data_r <- indicators_new3[indicators_new3$Document == "NAP", ]
+ 
+breaks_r <- c(0, 1, 2, 3, 4, 5)
+```
+Plot
+```{r}
+png("C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Results/ED_Figure1c.png", width = 3, height = 3, units = "in", res = 330)
+
+par(family = "Arial", cex = 0.7)
+
+hist_r <- {
+  hist(ndc_data_r$nr_criteria, breaks = breaks_r, main = "", xlab = "SMART criteria (n)", ylab = "Countries (n)", col = "#01665e", ylim = c(0, 10), xaxt = "n")
+  mean_ndc_r <- mean(ndc_data_r$nr_criteria)
+  sd_ndc_r <- sd(ndc_data_r$nr_criteria)
+  curve(dnorm(x, mean = mean_ndc_r, sd = sd_ndc_r) * length(ndc_data_r$nr_criteria) * diff(breaks_r)[1], col = "#001a18", lwd = 2, add = TRUE)
+}
+
+hist(nap_data_r$nr_criteria, breaks = breaks_r, main = "", xlab = "SMART criteria (n)", ylab = "Countries (n)", col = rgb(214, 179, 101, alpha = 128, maxColorValue = 255), add = TRUE, ylim = c(0, 10), xaxt = "n")
+mean_nap_r <- mean(nap_data_r$nr_criteria)
+sd_nap_r <- sd(nap_data_r$nr_criteria)
+curve(dnorm(x, mean = mean_nap_r, sd = sd_nap_r) * length(nap_data_r$nr_criteria) * diff(breaks_r)[1], col = "#8c510a", lwd = 2, add = TRUE)
+
+ndc_counts_r <- hist(ndc_data_r$nr_criteria, breaks = breaks_r, plot = FALSE)
+nap_counts_r <- hist(nap_data_r$nr_criteria, breaks = breaks_r, plot = FALSE)
+
+#legend("top", legend = c("NDC", "NAP"), fill = c("#01665e", rgb(214, 179, 101, alpha = 128, maxColorValue = 255)))
+
+dev.off()
+```

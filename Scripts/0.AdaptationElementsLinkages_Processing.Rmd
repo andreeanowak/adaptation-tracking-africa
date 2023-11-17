@@ -5,9 +5,8 @@ date: "2023-10-23"
 ---
 # Summary
 Data for this code are available at: https://doi.org/10.7910/DVN/VK3CP, file "AdaptationElementsLinkages".
-This code explains how the information on linkages between the adaptation elements has been processed into an adjacency matrix. 
-The resulting dataframe should be saved to a local file, as it will be used as basis for creating the chord diagram (See GitHub code "2.Coherence")
-
+This code generates an adjacency matrix based on information on linkages between the adaptation elements.  
+The resulting dataframe should be saved to a local file, as it will be used as basis for creating the chord diagram (See code "2.Coherence")
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -18,13 +17,13 @@ Load package
 library(tidyr)
 library(dplyr)
 ```
-
 # Preparation
 To run this code, download the file "AdaptationElementsLinkages" available at: https://doi.org/10.7910/DVN/VK3CP.
 Adjust the file path below with the correct location where you saved the "AdaptationElementsLinkages" file
 ```{r}
 linkages <- read.csv(file = "C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Data/Data-Raw/AdaptationElementsLinkages.csv", fileEncoding = "Windows-1252")
 ```
+
 # Step 1: Dataset Examination
 We began with the "AdaptationElementsLinkages" dataset containing information on the connections between different elements such as 'Hazard', 'System', 'Goal', etc., for 53 countries. Each row represented a country's document (NAP and/or NDC), and the columns indicated binary relations (1 for a connection and 0 for no connection) between these elements.
 
@@ -35,6 +34,7 @@ linkages_agg <- linkages %>%
    group_by(Country, ISO3) %>%
   summarise(across(HazardSystem:ActionIndicator, ~ifelse(any(. == 1), 1, 0)))
 ```
+
 # Step 3: Construction of Adjacency Matrix
 An empty 6x6 adjacency matrix is initialized to capture the relationships between pairs of elements. This matrix's rows and columns represents the distinct elements ('Hazard', 'System', 'Goal', etc.), and the matrix would eventually show how often each pair of elements co-occurred in the dataset.
 ```{r}
@@ -69,7 +69,6 @@ for (colname in connection_columns) {
     adj_matrix[nodes_involved[2], nodes_involved[1]] <- connection_value
   }
 }
-
 # Adjusting values for problematic entries
 adj_matrix["Hazard", "System"] <- sum(linkages_agg$HazardSystem, na.rm = TRUE)
 adj_matrix["System", "Hazard"] <- sum(linkages_agg$HazardSystem, na.rm = TRUE)
@@ -80,6 +79,7 @@ adj_matrix["Goal", "Hazard"] <- sum(linkages_agg$HazardGoal, na.rm = TRUE)
 # Print the adjacency matrix
 print(adj_matrix)
 ```
+
 # Descriptive statistics
 Compute information on number of linkages per country
 ```{r}

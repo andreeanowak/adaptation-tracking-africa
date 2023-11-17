@@ -6,7 +6,7 @@ date: "2023-04-18"
 
 # Summary
 Data for this code are available at: https://doi.org/10.7910/DVN/VK3CP/
-This code explains the analysis carried out for assessing coherence of information in NDCs and NAPs. 
+This code assesses coherence of information across countries and document types (NDCs and NAPs). 
 Specifically, it helps to generate Figure 3 in the Manuscript illustrating the coherence between adaptation cycle elements. 
 In the figure, nodes represent the six adaptation elements. Links indicate the frequency of co-occurrence between two elements. n represents the total number of countries that identify a type of adaptation element (hazards, system at risk, goal, objective, action, or indicator); or that establish linkages between two pairs of elements. The wider the link, the more countries explicitly establish a link between the corresponding pair of elements. Each color represents an adaptation element. The grey circle highlights four stages of the adaptation cycle: assessment, planning, implementation, and monitoring and evaluation. 
 
@@ -70,3 +70,4 @@ chordDiagram(mylinks, column.col = colors, grid.col = colors, transparency = 0.3
 circos.clear() 
 dev.off()
 ```
+

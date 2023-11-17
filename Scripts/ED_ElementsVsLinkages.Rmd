@@ -1,0 +1,71 @@
+---
+title: "ED_ElementsVsLinkages"
+output: html_document
+date: "2023-10-26"
+---
+
+# Summary
+Data for this code are available at: https://doi.org/10.7910/DVN/VK3CP, files "AdaptationElementsLinkages" and "AdaptationElements"
+This code generates a scatter plot showing the relationship between comprehensiveness and coherence (Extended Data Figure 3). 
+Specifically, it illustrates the relationship between number of elements and number of linkages between elements in a country (NDC and NAP combined). Each dot represents an African country (N=53). The blue regression line indicates the linear relationship between the two variables. Country names are expressed using their ISO 3166-1 alpha-3 codes
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load packages
+```{r}
+library(ggplot2)
+library(dplyr)
+library(ggrepel)  # For non-overlapping text labels
+```
+
+# Preparation
+DonloElements vs Linkages
+To run this code, download the files "AdaptationElements" and "AdaptationElementsLinkages" available at: https://doi.org/10.7910/DVN/VK3CP.
+Adjust the file path below with the correct location where you saved the files
+
+First, you will have to create a table that shows: country, n linkages in a country (based on "AdaptationElementsLinkages" file) and n elements and n element types in a country (based on "AdaptationElements" file). Then call the table as a new dataframe.
+"Elem_links" represents the new dataframe generated, which has been stored on a local file.  
+```{r}
+elem_links <- read.csv(file = "C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Data/Data-Processed/ElementsVsLinkages.csv", fileEncoding = "Windows-1252")
+```
+
+# Extended data Figure 3: Relationship betwee
+```{r}
+elem_links$n_linkages <- as.numeric(elem_links$n_linkages) 
+elem_links$n_elements <- as.numeric(elem_links$n_elements) 
+elem_links$n_element_types <- as.numeric(elem_links$n_element_types)
+```
+Plot
+```{r}
+elem_links_scatter <- ggplot(elem_links) +
+  geom_point(aes(x=n_linkages, y=n_elements)) + 
+  geom_text_repel(aes(x=n_linkages, y=n_elements, label=iso3), size=3) +
+  geom_smooth(aes(x=n_linkages, y=n_elements), method="lm", col="#8bcac4") + 
+  theme_minimal() +
+  theme(
+    panel.grid.major = element_blank(),      # Removing major grid lines
+    panel.grid.minor = element_blank(),      # Removing minor grid lines
+    axis.line = element_line(size = 0.5),    # Adding thin lines for axes
+    axis.ticks = element_line(size = 0.5)) +   # Adding thin ticks
+  labs(title="", x="n linkages", y="n elements")
+elem_links_scatter
+```
+## Analyse correlation
+```{r}
+# calculate Pearsons correlation coefficient
+correlation <- cor(elem_links$n_linkages, elem_links$n_elements)
+print(correlation)
+
+# test significance of the correlation
+cor_test <- cor.test(elem_links$n_linkages, elem_links$n_elements)
+print(cor_test)
+```
+
+## Save data to local files
+Modify the file path to specify the location where you would like to store the new dataframe
+```{r}
+ggsave("C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Results/ED_Fig3.png", elem_links_scatter, width=9, height=5)
+```
+

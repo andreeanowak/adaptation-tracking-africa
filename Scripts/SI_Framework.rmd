@@ -1,0 +1,66 @@
+---
+title: "SI_Framework"
+output: html_document
+date: "2023-03-17"
+---
+
+# Summary
+This code aims to create the figure for the theoretical framework on adaptation tracking elements (Fugure 1 in Supplementary Information)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load packages
+```{r}
+library(dplyr)
+library(ggplot2)
+library(stringr)
+library(geomtextpath)
+```
+
+# Theoretical Framework 
+```{r}
+elements_fmwk <- data.frame(element = c("Hazards", "Systems at risks", "Goals", "Objectives", "Actions", "Indicators"), 
+                            countries = c(53, 53, 53, 53, 53, 53))
+
+# add column to calculate percentages
+elements_fmwk$percent <- elements_fmwk$countries / 53 
+elements_fmwk$percent <- round(elements_fmwk$percent, 1)
+
+# Plot
+elements_fmwk$element <- factor(elements_fmwk$element, levels = c("Hazards", "Systems at risks", "Goals", "Objectives",  "Actions", "Indicators"))
+```
+Plot
+```{r}
+par(cex = 0.7)
+
+plot_fmwk <- 
+  ggplot(elements_fmwk,aes(element, percent)) +
+  geom_col(aes(x = element, y = percent), # fill = "#F2F4F5"), 
+            colour="#292929",show.legend = FALSE, position = "dodge2", alpha = 0.9, fill = "#292929") +
+  #geom_hline(yintercept=0.25, colour="#179281", linetype="dotted",alpha=0.5) +
+  #geom_hline(yintercept=0.50, colour="#179281",linetype="dotted",alpha=0.5)+
+  #geom_hline(yintercept=0.75, colour="#179281",linetype="dotted",alpha=0.5)+ 
+  #geom_hline(yintercept=1, colour="#179281",alpha=0.5)+ 
+  coord_polar() +
+  scale_y_continuous(limits = c(-0.1, 1)) + 
+ # scale_x_discrete(labels = function(x) str_wrap(x, width = 8)) + 
+  labs(fill="", 
+       title = "",
+       subtitle = "") +
+  theme_minimal() +
+  theme(panel.background = element_blank(),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_text(size = 16, 
+          colour = "#292929"), #angle = ang),
+        panel.grid.major = element_blank())  +
+  coord_curvedpolar()
+
+plot_fmwk
+```
+Save file
+```{r}
+ggsave("C:/Users/anowak/OneDrive - CGIAR/PhD/Ch1/Results/SI_Figure1.png", plot_fmwk, width=8, height=8)
+```
